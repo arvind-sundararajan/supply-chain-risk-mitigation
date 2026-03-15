@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supply-chain-risk-mitigation
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: supply-chain-risk-mitigation
+  template:
+    metadata:
+      labels:
+        app: supply-chain-risk-mitigation
+    spec:
+      containers:
+      - name: app
+        image: gcr.io/[PROJECT-ID]/supply-chain-risk-mitigation:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DATABASE_URL
+          value: "postgres://user:password@db:5432/database"
+        - name: REDIS_URL
+          value: "redis://redis:6379"
+      - name: db
+        image: postgres:13
+        env:
+        - name: POSTGRES_USER
+          value: "user"
+        - name: POSTGRES_PASSWORD
+          value: "password"
+        - name: POSTGRES_DB
+          value: "database"
+      - name: redis
+        image: redis:6
